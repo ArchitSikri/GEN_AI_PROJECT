@@ -10,6 +10,12 @@ const tokenBlacklistModel = require("../model/blacklist.model")
  */
 async function registerUserController(req, res) {
 
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({
+            message: "Server authentication is not configured"
+        })
+    }
+
     const { username, email, password } = req.body
 
     if (!username || !email || !password) {
@@ -63,6 +69,12 @@ async function registerUserController(req, res) {
  * @access Public
  */
 async function loginUserController(req, res) {
+
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({
+            message: "Server authentication is not configured"
+        })
+    }
 
     const { email, password } = req.body
 

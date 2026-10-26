@@ -1,12 +1,32 @@
 import { useState } from 'react'
 import { Eye, EyeOff, Sparkles } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ArrowRightLineIcon from 'remixicon-react/ArrowRightLineIcon'
 import LockPasswordLineIcon from 'remixicon-react/LockPasswordLineIcon'
 import MailLineIcon from 'remixicon-react/MailLineIcon'
+import { useAuth } from '../hooks/useAuth'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const { loading, handleLogin } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setErrorMessage('')
+
+    try {
+      await handleLogin({ email, password })
+      navigate('/main')
+    } catch (error) {
+      setErrorMessage(
+        error.response?.data?.message || 'Unable to sign in. Please try again.',
+      )
+    }
+  }
 
   return (
     <main className="relative isolate flex min-h-screen items-center justify-center overflow-hidden bg-[#08090d] px-4 py-8 text-white sm:px-6">
@@ -47,7 +67,16 @@ const Login = () => {
           </p>
         </div>
 
-        <form className="grid gap-5" onSubmit={(event) => event.preventDefault()}>
+        <form className="grid gap-5" onSubmit={handleSubmit}>
+          {errorMessage && (
+            <p
+              className="rounded-xl border border-red-300/25 bg-red-950/40 px-4 py-3 text-sm text-red-100"
+              role="alert"
+            >
+              {errorMessage}
+            </p>
+          )}
+
           <div className="grid gap-2">
             <label className="text-xs font-medium text-white/80" htmlFor="email">
               Email address
@@ -61,6 +90,8 @@ const Login = () => {
                 placeholder="you@example.com"
                 autoComplete="email"
                 required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
               />
             </div>
@@ -79,6 +110,8 @@ const Login = () => {
                 placeholder="Enter your password"
                 autoComplete="current-password"
                 required
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
                 className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
               />
               <button
@@ -99,8 +132,9 @@ const Login = () => {
           <button
             className="group mt-2 flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-red-200/35 bg-[#9e1e2d]/90 px-5 text-sm font-semibold text-white shadow-[0_8px_30px_rgba(158,30,45,0.25)] transition hover:border-red-100/60 hover:bg-[#b52535] active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-200"
             type="submit"
+            disabled={loading}
           >
-            Sign in
+            {loading ? 'Signing in…' : 'Sign in'}
             <ArrowRightLineIcon
               size={18}
               aria-hidden="true"
