@@ -7,6 +7,7 @@ import {
   Upload,
   UserRound,
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const Main = () => {
   return (
@@ -27,10 +28,19 @@ const Main = () => {
             </span>
             GENAI
           </a>
-          <span className="hidden items-center gap-2 text-xs font-medium text-white/55 sm:inline-flex">
-            <span className="size-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.7)]" />
-            Interview workspace
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="hidden items-center gap-2 text-xs font-medium text-white/55 sm:inline-flex">
+              <span className="size-2 rounded-full bg-emerald-300 shadow-[0_0_12px_rgba(110,231,183,0.7)]" />
+              Interview workspace
+            </span>
+            <Link
+              to="/profile"
+              className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/15 bg-white/[0.07] px-3 text-xs font-semibold text-white/85 no-underline transition hover:border-sky-200/35 hover:bg-sky-300/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-200 sm:px-4 sm:text-sm"
+            >
+              <UserRound size={16} aria-hidden="true" className="text-sky-200" />
+              <span>My profile</span>
+            </Link>
+          </div>
         </header>
 
         <section className="grid flex-1 items-center gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14 lg:py-14">

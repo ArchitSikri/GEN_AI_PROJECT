@@ -1,7 +1,6 @@
-import { useContext, useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useContext } from 'react'
 import { AuthContext } from '../context/auth.context'
-import { getMe, login, logout, register } from '../services/auth.api'
+import { login, logout, register } from '../services/auth.api'
 
 export const useAuth = () => {
   const context = useContext(AuthContext)
@@ -11,7 +10,6 @@ export const useAuth = () => {
   }
 
   const { user, setUser, loading, setLoading } = context
-  const { pathname } = useLocation()
 
   const handleLogin = async ({ email, password }) => {
     setLoading(true)
@@ -45,35 +43,6 @@ export const useAuth = () => {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    if (pathname !== '/main') {
-      setLoading(false)
-      return undefined
-    }
-
-    let isMounted = true
-
-    const getAndSetUser = async () => {
-      try {
-        const data = await getMe()
-        if (isMounted) setUser(data.user)
-      } catch (error) {
-        if (isMounted) setUser(null)
-        if (error.response?.status !== 401) {
-          console.error('Unable to restore the current user session:', error)
-        }
-      } finally {
-        if (isMounted) setLoading(false)
-      }
-    }
-
-    getAndSetUser()
-
-    return () => {
-      isMounted = false
-    }
-  }, [pathname, setLoading, setUser])
 
   return { user, loading, handleRegister, handleLogin, handleLogout }
 }

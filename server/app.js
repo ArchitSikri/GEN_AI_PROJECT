@@ -25,4 +25,9 @@ app.get("/", (req, res) => {
 
 const authRouter = require("./src/routes/auth.route")
 app.use("/api/auth" , authRouter)
+
+const interviewRouter = require("./src/routes/interview.routes")
+app.use('/api/interview' , interviewRouter)
+
+
 module.exports = app;
